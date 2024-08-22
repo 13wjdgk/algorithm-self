@@ -1,0 +1,51 @@
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Main {
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[N];
+		Set<Integer> sumValue = new HashSet<>();
+		for(int i = 0;i<N;i++){
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+		for(int i =0;i<N;i++){
+			for(int j = 0;j<N;j++){
+				int sum = arr[i]+arr[j];
+				sumValue.add(sum);
+			}
+		}
+		int max = 0;
+		for(int i = N-1;i>=0;i--){
+			boolean flag = false;
+			for(int j = i;j>=0;j--){
+				int value = Math.abs(arr[i]-arr[j]);
+				if(sumValue.contains(value)){
+					flag = true;
+					break;
+				}
+
+			}
+			if(flag){
+				max = Math.max(max,arr[i]);
+			}
+		}
+		System.out.println(max);
+
+
+
+
+	}
+
+
+
+
+
+
+}
+
+
