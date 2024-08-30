@@ -1,0 +1,72 @@
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+public class Main {
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int[] arr = new int[N];
+		for(int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
+		}
+		Stack<Integer> stack = new Stack<>();
+		Set<Integer> numSet = new HashSet<>();
+		long result = 0;
+		for(int i = 0; i < N; i++) {
+			int num = arr[i];
+			//포함하지 않는다면
+			if(!numSet.contains(num)){
+				stack.add(num);
+				numSet.add(num);
+			}else{
+				// 포함한다면
+				int cnt = 1;
+				Stack<Integer> subStack = new Stack<>();
+				while(!stack.isEmpty()){
+					int removeNum = stack.pop();
+					if(removeNum!=num){
+						subStack.add(removeNum);
+						cnt++;
+					}else{
+						numSet.remove(removeNum);
+						result += cnt;
+						cnt++;
+						while(!stack.isEmpty()){
+							int subNum = stack.pop();
+							numSet.remove(subNum);
+							result += cnt;
+							cnt++;
+						}
+					}
+				}
+				while (!subStack.isEmpty()){
+					stack.add(subStack.pop());
+				}
+				stack.add(num);
+				numSet.add(num);
+			}
+		}
+		int cnt = 1;
+		while(!stack.isEmpty()){
+			int removeNum = stack.pop();
+			result += cnt;
+			cnt++;
+		}
+		System.out.println(result);
+
+	}
+
+
+
+
+
+
+}
+
+
