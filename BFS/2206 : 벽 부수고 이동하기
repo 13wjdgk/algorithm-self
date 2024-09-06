@@ -1,0 +1,140 @@
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+	static int[][] map;
+	static int[][][] visitedCnt;
+	static boolean[][] visited;
+	static int N,M;
+	static int[] dn = {-1,0,+1,0};
+	static int[] dm = {0,+1,0,-1};
+
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		map = new int[N][M];
+		visitedCnt = new int[2][N][M];
+		visited = new boolean[N][M];
+		for(int n = 0; n<N;n++){
+			char[] str = br.readLine().toCharArray();
+			for(int m =0;m<M;m++){
+				map[n][m] = Integer.parseInt(String.valueOf(str[m]));
+				visitedCnt[0][n][m] = -1;
+				visitedCnt[1][n][m] = -1;
+			}
+		}
+		visitedCnt[0][0][0] = 1;
+
+		visited[0][0] = true;
+		findMapBFS(0,0);
+		int startResult = -1;
+		if(visitedCnt[0][N-1][M-1]>0&&visitedCnt[1][N-1][M-1]>0){
+			startResult = Math.min(visitedCnt[0][N-1][M-1],visitedCnt[1][N-1][M-1]);
+		}else if(visitedCnt[1][N-1][M-1]>0){
+			startResult =visitedCnt[1][N-1][M-1];
+		}else if(visitedCnt[0][N-1][M-1]>0){
+			startResult = visitedCnt[0][N-1][M-1];
+		}else{
+			startResult =-1;
+		}
+
+		for(int n = 0; n<N;n++){
+			for(int m =0;m<M;m++){
+				visitedCnt[0][n][m] = -1;
+				visitedCnt[1][n][m] = -1;
+				visited[n][m] = false;
+			}
+		}
+		visitedCnt[0][N-1][M-1] = 1;
+		visited[N-1][M-1] = true;
+		findMapBFS(N-1,M-1);
+		int endResult = -1;
+		if(visitedCnt[0][0][0]>0&&visitedCnt[1][0][0]>0){
+			endResult = Math.min(visitedCnt[0][0][0],visitedCnt[1][0][0]);
+		}else if(visitedCnt[1][0][0]>0){
+			endResult =visitedCnt[1][0][0];
+		}else if(visitedCnt[0][0][0]>0){
+			endResult = visitedCnt[0][0][0];
+		}else{
+			endResult =-1;
+		}
+
+		if(startResult==endResult){
+			System.out.println(startResult);
+		}else if(startResult==-1&&endResult!=-1){
+			System.out.println(endResult);
+		}else{
+			System.out.println(startResult);
+		}
+
+
+
+	}
+
+
+	public static void findMapBFS(int startN,int startM){
+		Queue<int[]> queue = new LinkedList<>();
+		queue.add(new int[]{startN,startM});
+		while(!queue.isEmpty()){
+			int[] status = queue.poll();
+			for(int i =0;i<4;i++){
+				int nextN = status[0]+dn[i];
+				int nextM = status[1]+dm[i];
+				if(nextN>=0 && nextN<N && nextM>=0 && nextM<M){
+					if(visited[nextN][nextM]){
+						//1을 한번 거쳤는데, 만약 1을 한번도 안거쳤을때와 거리가 같다면 업데이트
+						if(map[nextN][nextM]==0&&visitedCnt[1][nextN][nextM]!= -1 &&visitedCnt[1][nextN][nextM]==(visitedCnt[0][status[0]][status[1]]+1)){
+							visitedCnt[1][nextN][nextM] = -1;
+							visitedCnt[0][nextN][nextM] = visitedCnt[0][status[0]][status[1]]+1;
+						}
+						continue;
+					}
+					if(map[nextN][nextM]==0){
+
+						// 1을 한번도 안거친 경우
+						if( visitedCnt[0][status[0]][status[1]]>0){
+							visited[nextN][nextM] = true;
+							visitedCnt[0][nextN][nextM] = visitedCnt[0][status[0]][status[1]]+1;
+							queue.add(new int[]{nextN,nextM});
+						}
+						// 항상 1만 거쳤을 경우 -> visitedCnt[0][nextN][nextM] = -1 유지
+						// 1을 거쳤던 경우,
+						if(visitedCnt[1][status[0]][status[1]] > 0){
+							visited[nextN][nextM] = true;
+							visitedCnt[1][nextN][nextM] = visitedCnt[1][status[0]][status[1]]+1;
+							queue.add(new int[]{nextN,nextM});
+						}
+						// 한번도 1을 안거친 경우-> visitedCnt[1][nextN][nextM]  = -1 유지
+
+					}else{
+						// 현재 수가 1일때, 과거에도 1을 거쳤던 경우 -> -1 유지 , 갈 수 없음
+						if(visitedCnt[0][status[0]][status[1]]==-1){
+
+						}
+						//현재 수가 1일때, 과거에 1을 거친적이 없던 경우 -> 기존 +1
+						if(visitedCnt[1][status[0]][status[1]]==-1){
+							visited[nextN][nextM] = true;
+							visitedCnt[1][nextN][nextM] = visitedCnt[0][status[0]][status[1]]+1;
+							queue.add(new int[]{nextN,nextM});
+						}
+						// 현재수가 1이기 때문에, 1을 안거친 경우는 없다.
+
+					}
+
+				}
+			}
+		}
+
+	}
+
+
+}
+
+
