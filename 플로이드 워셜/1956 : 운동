@@ -1,0 +1,73 @@
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	static int V,E;
+	static int[][] loads;
+
+	public static void main(String[] args) throws Exception{
+	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	StringTokenizer st = new StringTokenizer(br.readLine());
+	V = Integer.parseInt(st.nextToken());
+	E = Integer.parseInt(st.nextToken());
+	loads = new int[V+1][V+1];
+	for(int i =0;i<=V;i++){
+		for(int j =0;j<=V;j++){
+			if(i==j){
+				loads[i][j] = 0;
+			}else{
+				loads[i][j] = Integer.MAX_VALUE;
+			}
+		}
+	}
+
+	for(int e = 0;e<E;e++){
+		st = new StringTokenizer(br.readLine());
+		int start = Integer.parseInt(st.nextToken());
+		int end = Integer.parseInt(st.nextToken());
+		int w = Integer.parseInt(st.nextToken());
+		loads[start][end] = w;
+
+	}
+
+	for(int start = 1;start<=V;start++){
+		for(int end = 1;end<=V;end++){
+			for(int mid = 1;mid<=V;mid++){
+				if(loads[start][mid]!=Integer.MAX_VALUE&&loads[mid][end]!=Integer.MAX_VALUE){
+					loads[start][end] = Math.min(loads[start][end],Math.abs(loads[start][mid]+loads[mid][end]));
+				}
+			}
+		}
+	}
+	int minValue = Integer.MAX_VALUE;
+	for(int node = 1;node<=V;node++){
+		int[] load = loads[node];
+		for(int i =1;i<=V;i++){
+			if(node!=i){
+				if(load[i]!=Integer.MAX_VALUE&&loads[i][node]!=Integer.MAX_VALUE){
+					if(minValue>(load[i]+loads[i][node])){
+						minValue = load[i]+loads[i][node];
+					}
+				}
+			}
+		}
+	}
+	if(minValue==Integer.MAX_VALUE){
+		System.out.println(-1);
+	}else{
+		System.out.println(minValue);
+	}
+
+	}
+}
+
+
