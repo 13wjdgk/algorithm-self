@@ -1,0 +1,73 @@
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+
+import java.util.StringTokenizer;
+
+public class Main {
+
+	static int V,E;
+	static int[][] buses;
+	static long[] dist;
+
+	public static void main(String[] args) throws Exception{
+	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	StringTokenizer st = new StringTokenizer(br.readLine());
+	V = Integer.parseInt(st.nextToken());
+	E = Integer.parseInt(st.nextToken());
+	buses = new int[E][3];
+	dist = new long[V+1];
+
+
+
+
+	for(int e = 0;e<E;e++){
+		st = new StringTokenizer(br.readLine());
+		int start = Integer.parseInt(st.nextToken());
+		int end = Integer.parseInt(st.nextToken());
+		int w = Integer.parseInt(st.nextToken());
+		buses[e][0] = start;
+		buses[e][1] = end;
+		buses[e][2] = w;
+
+	}
+
+	for( int i =0;i<=V;i++){
+		dist[i] = Integer.MAX_VALUE;
+	}
+	dist[1] = 0;
+	//벨만포드 ()
+		// 모든 간선을 [정점의 수V -1]만큼 반복한다. ( 정점이 V개 있을 때, 정점 1부터 특정 정점까지의 거리의 최대 길이는 모든 정점을 방문하는 것이고, 모든 정점을 방문하려면 간선은 V-1개를 거쳐야 한다.
+	for( int i =1 ;i<V;i++){
+		for(int e =0 ;e<E;e++){
+			// 간선 시작점이 방문된 점
+			if(dist[buses[e][0]]!=Integer.MAX_VALUE){
+				dist[buses[e][1]] = Math.min(dist[buses[e][1]],dist[buses[e][0]]+ buses[e][2]);
+			}
+		}
+	}
+	// 모든 경우를 고려하여 최단 거리를 구했음에도 불구하고, 또 거리값이 업데이트 된다면 그 부분은 음수 사이클
+	boolean isMinusCycle = false;
+		for(int e =0 ;e<E;e++){
+			// 간선 시작점이 방문된 점
+			if(dist[buses[e][0]]!=Integer.MAX_VALUE&&dist[buses[e][1]]>dist[buses[e][0]]+ buses[e][2]){
+				isMinusCycle = true;
+				break;
+			}
+		}
+	// 음수 싸이클이 존재함
+	if(isMinusCycle){
+		System.out.println(-1);
+	}else{
+		//음수 싸이클은 존재하지 않지만, 해당 도시로 가는 경로가 없을 수 있음
+		for(int i =2;i<=V;i++){
+			long result = dist[i] == Integer.MAX_VALUE ? -1 : dist[i];
+			System.out.println(result);
+		}
+	}
+
+
+	}
+}
+
+
