@@ -1,0 +1,51 @@
+import java.io.BufferedReader;
+
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws Exception {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+		int T = Integer.parseInt(br.readLine());
+		boolean[] results = new boolean[T];
+		for(int t = 0;t<T;t++){
+			int N = Integer.parseInt(br.readLine());
+			String[] strings = new String[N];
+			for(int n = 0;n<N;n++){
+				strings[n] = br.readLine();
+			}
+			Arrays.sort(strings);
+			boolean flag = true;
+			for(int n = 0;n<N;n++){
+				String pre = strings[n];
+				if(n+1<N&&strings[n+1].startsWith(pre)){
+					flag = false;
+					break;
+				}
+			}
+			results[t] = flag;
+
+		}
+		for(int t = 0;t<T;t++){
+			if(results[t]){
+				bw.append("YES\n");
+			}else{
+				bw.append("NO\n");
+			}
+		}
+		bw.flush();
+		bw.close();
+
+	}
+}
+
+
