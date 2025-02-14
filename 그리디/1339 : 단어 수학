@@ -1,0 +1,50 @@
+import java.io.BufferedReader;
+
+import java.io.InputStreamReader;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws Exception {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		String[] strings = new String[N];
+		PriorityQueue<Integer[]> q = new PriorityQueue<>((a1,a2)->a2[1]-a1[1]);
+		Map<Character,Integer> number = new HashMap<>();
+		Map<Integer,Integer> counts = new HashMap<>();
+		for(int i =0;i<N;i++){
+			strings[i] = br.readLine();
+			for(int j =0;j<strings[i].length();j++){
+				int alpha= strings[i].charAt(j)-65;
+				counts.put(alpha,counts.getOrDefault(alpha,0)+(int)Math.pow(10,strings[i].length()-j-1));
+			}
+		}
+		for(Map.Entry<Integer,Integer> entry:counts.entrySet()){
+			q.add(new Integer[]{entry.getKey(),entry.getValue()});
+		}
+		int status = 9;
+		while(!q.isEmpty()){
+			Integer[] value = q.poll();
+			number.put((char)(value[0]+65),status);
+			status--;
+		}
+		int sum =0;
+		for(int i =0;i<N;i++){
+			int num = 0;
+			for(int j =0;j<strings[i].length();j++){
+				num+=number.get(strings[i].charAt(j))*Math.pow(10,strings[i].length()-j-1);
+			}
+			sum+=num;
+		}
+		System.out.println(sum);
+
+	}
+}
+
+
