@@ -1,0 +1,28 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		double[] arr = new double[N];
+		for(int n =0;n<N;n++){
+			double num = Double.parseDouble(br.readLine());
+			if(n==0){
+				arr[0] = num;
+			}else{
+				arr[n] = Math.max(num,arr[n-1]*num);
+			}
+
+		}
+
+		Arrays.sort(arr);
+		System.out.println(String.format("%.3f",arr[N-1]));
+
+	}
+
+
+}
