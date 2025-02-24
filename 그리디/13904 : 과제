@@ -1,0 +1,50 @@
+import java.util.*;
+import java.io.*;
+
+
+class Main {
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		PriorityQueue<int[]> q = new PriorityQueue<>((int[] a, int[]b)->{
+
+			int result = Integer.compare(b[1],a[1]);
+			if(result==0){
+				return Integer.compare(a[0],b[0]);
+			}
+			return result;
+		});
+		int maxDay = 0;
+		for(int n=0;n<N;n++){
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int day = Integer.parseInt(st.nextToken());
+			int value = Integer.parseInt(st.nextToken());
+			q.add(new int[]{day,value});
+			maxDay = Math.max(maxDay,day);
+		}
+		int[] values = new int[maxDay+1];
+
+		while(!q.isEmpty()){
+			int[] subject = q.poll();
+			int day = subject[0];
+			int value = subject[1];
+
+			for(int d = day;d>0;d--){
+				if(values[d]==0){
+					values[d] = value;
+					break;
+				}
+			}
+
+		}
+
+		int sum =0;
+		for(int d=1;d<maxDay+1;d++){
+			sum+=values[d];
+		}
+		System.out.println(sum);
+
+	}
+
+}
