@@ -1,0 +1,127 @@
+import java.util.*;
+import java.io.*;
+import java.util.stream.Collectors;
+
+class Main {
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		Queue<int[]> q = new LinkedList<>();
+
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+
+		int[][] board = new int[N][M];
+		boolean[][] visited = new boolean[N][M];
+
+		for(int n =0;n<N;n++){
+			st = new StringTokenizer(br.readLine());
+			for(int m =0;m<M;m++){
+				board[n][m] = Integer.parseInt(st.nextToken());
+			}
+		}
+
+		st = new StringTokenizer(br.readLine());
+		int H = Integer.parseInt(st.nextToken());
+		int W = Integer.parseInt(st.nextToken());
+		int SR = Integer.parseInt(st.nextToken())-1;
+		int SC = Integer.parseInt(st.nextToken())-1;
+		int FR = Integer.parseInt(st.nextToken())-1;
+		int FC = Integer.parseInt(st.nextToken())-1;
+
+		q.add(new int[]{SR,SC,0});
+		//{위, 오른쪽, 아래, 왼쪽}
+		int[] dx = {0,+1,0,-1};
+		int[] dy = {-1,0,+1,0};
+		boolean failed = true;
+		while(!q.isEmpty()){
+			int[] rectangle = q.poll();
+
+			if(rectangle[0]==FR&&rectangle[1]==FC){
+				System.out.println(rectangle[2]);
+				failed = false;
+				break;
+			}
+
+			for(int i =0;i<4;i++){
+				// 위
+				if(i==0){
+					int row = rectangle[0]+dy[i];
+					if(0<=row&&row<N){
+						boolean flag = true;
+						for(int col = rectangle[1];col<rectangle[1]+W;col++){
+							if(board[row][col]==1){
+								flag=false;
+								break;
+							}
+						}
+						if(flag&&!visited[row][rectangle[1]]){
+							q.add(new int[]{row,rectangle[1],rectangle[2]+1});
+							visited[row][rectangle[1]] = true;
+						}
+					}
+				}
+				// 아래
+				else if (i==2){
+					int row = rectangle[0]+H-1+dy[i];
+					if(0<=row&&row<N){
+						boolean flag = true;
+						for(int col = rectangle[1];col<rectangle[1]+W;col++){
+							if(board[row][col]==1){
+								flag=false;
+								break;
+							}
+						}
+						if(flag&&!visited[rectangle[0]+dy[i]][rectangle[1]]){
+							q.add(new int[]{rectangle[0]+dy[i],rectangle[1],rectangle[2]+1});
+							visited[rectangle[0]+dy[i]][rectangle[1]] = true;
+						}
+					}
+				}
+				// 오른쪽
+				else if(i==1){
+					int col = rectangle[1]+W-1+dx[i];
+					if(0<=col&&col<M){
+						boolean flag = true;
+						for(int row = rectangle[0];row<rectangle[0]+H;row++){
+							if(board[row][col]==1){
+								flag=false;
+								break;
+							}
+						}
+						if(flag&&!visited[rectangle[0]][rectangle[1]+dx[i]]){
+							q.add(new int[]{rectangle[0],rectangle[1]+dx[i],rectangle[2]+1});
+							visited[rectangle[0]][rectangle[1]+dx[i]] = true;
+						}
+					}
+				}// 왼쪽
+				else if(i==3){
+					int col = rectangle[1]+dx[i];
+					if(0<=col&&col<M){
+						boolean flag = true;
+						for(int row = rectangle[0];row<rectangle[0]+H;row++){
+							if(board[row][col]==1){
+								flag=false;
+								break;
+							}
+						}
+						if(flag&&!visited[rectangle[0]][col]){
+							q.add(new int[]{rectangle[0],col,rectangle[2]+1});
+							visited[rectangle[0]][col] = true;
+						}
+					}
+				}
+			}
+
+		}
+		if(failed){
+			System.out.println(-1);
+		}
+
+
+
+
+	}
+
+}
