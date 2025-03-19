@@ -1,0 +1,83 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		Queue<Integer> queue = new Queue<Integer>();
+		int N = Integer.parseInt(br.readLine());
+		for(int n=0;n<N;n++){
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			String command = st.nextToken();
+
+			switch (command) {
+				case "push" :
+					queue.push(Integer.parseInt(st.nextToken()));
+					break;
+
+				case "pop" :
+					Integer item = queue.pop();
+					System.out.println(item==null?-1:item);
+					break;
+
+				case "size" :
+					System.out.println(queue.size());
+					break;
+
+				case "empty" :
+					System.out.println(queue.empty());
+					break;
+
+				case "front" :
+					item = queue.front();
+					System.out.println(item==null?-1:item);
+					break;
+
+				case "back" :
+					item = queue.back();
+					System.out.println(item==null?-1:item);
+
+				default:
+					break;
+			}
+
+		}
+
+	}
+	public static class Queue<T> {
+		private LinkedList<T> list = new LinkedList<>();
+
+		public void push(T item){
+			list.add(item);
+		}
+
+		public T pop(){
+			if(list.size() == 0) {
+				return null;
+			}
+			return list.remove(0);
+		}
+
+		public int size(){
+			return list.size();
+		}
+
+		public int empty(){
+			return list.size() == 0 ? 1 : 0;
+		}
+
+		public T front(){
+			if(list.size()==0){
+				return null;
+			}
+			return list.get(0);
+		}
+
+		public T back(){
+			if(list.size()==0) return null;
+			return list.getLast();
+		}
+	}
+
+}
