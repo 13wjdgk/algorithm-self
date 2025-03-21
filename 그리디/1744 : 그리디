@@ -1,0 +1,56 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+	static StringBuilder sb = new StringBuilder();
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		List<Integer> minusNums = new ArrayList<>();
+		List<Integer> plusNums = new ArrayList<>();
+		Integer zero = 0;
+		for(int n =0;n<N;n++){
+			Integer num = Integer.parseInt(br.readLine());
+			if(num>0){
+				plusNums.add(num);
+			}else if(num<0){
+				minusNums.add(num);
+			}else{
+				zero++;
+			}
+
+		}
+
+		Collections.sort(minusNums);
+		Collections.sort(plusNums,Collections.reverseOrder());
+
+		Long sum = 0L;
+		for(int n =0;n<minusNums.size();n++){
+			if(n+1 <minusNums.size()){
+				sum+= (minusNums.get(n) * minusNums.get(n+1));
+				n++;
+				continue;
+			}
+			if(zero <= 0){
+				sum+=minusNums.get(n);
+			}
+		}
+
+		for(int n =0;n<plusNums.size();n++){
+			if(plusNums.get(n) == 1){
+				sum+= plusNums.get(n);
+			}
+			else if(n+1 <plusNums.size() && plusNums.get(n+1) > 1){
+				sum+= (plusNums.get(n) * plusNums.get(n+1));
+				n++;
+			}else{
+				sum+= plusNums.get(n);
+			}
+
+		}
+		System.out.println(sum);
+
+	}
+
+
+}
