@@ -1,0 +1,46 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		char[] chars = br.readLine().toCharArray();
+		Stack<Character> stack = new Stack<>();
+		char[] ppap = new char[]{'P','A','P','P'};
+		for(char c : chars){
+			stack.push(c);
+			Stack<Character> checkStack = new Stack<>();
+			boolean isPPAP = false;
+			if(stack.size()>=4){
+				for(int i=0;i<4;i++){
+					if(stack.peek()==ppap[i]){
+						checkStack.push(stack.pop());
+						isPPAP = true;
+					}else{
+						isPPAP = false;
+						break;
+					}
+				}
+			}
+
+
+			if(isPPAP){
+				stack.push('P');
+			}else{
+				while(!checkStack.isEmpty()){
+					stack.push(checkStack.pop());
+				}
+			}
+		}
+
+		if(stack.size()==1&&stack.peek() == 'P'){
+			System.out.println("PPAP");
+		}else{
+			System.out.println("NP");
+		}
+
+
+
+	}
+
+}
