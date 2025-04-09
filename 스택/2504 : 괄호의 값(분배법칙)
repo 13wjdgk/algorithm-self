@@ -1,0 +1,60 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+
+
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String str = br.readLine();
+		System.out.println(checkBalance(str.toCharArray()));
+
+	}
+	private static int checkBalance(char[] chars){
+		Stack<Character> brackets = new Stack<>();
+		int sum =0;
+		int tmp = 1;
+		for(int i =0;i<chars.length;i++){
+			char c = chars[i];
+			if(c==')'||c==']'||c=='('||c=='['){
+				boolean result = false;
+				switch (c){
+					case ')':
+						if(!brackets.isEmpty()&&brackets.peek()=='(')result = true;
+						break;
+					case ']':
+						if(!brackets.isEmpty()&&brackets.peek()=='[') result = true;
+						break;
+					case '(':
+						tmp*=2;
+						break;
+					case '[' :
+						tmp*=3;
+						break;
+					default:
+						break;
+				}
+
+				if(result){
+					brackets.pop();
+					if(i>0&&(chars[i-1]=='('||chars[i-1]=='[')){
+						if(tmp>1) sum+=tmp;
+					}
+					if(c==')') tmp/=2;
+					else if(c==']') tmp/=3;
+					if(brackets.isEmpty()){
+						tmp = 1;
+					}
+				}else{
+					brackets.push(c);
+				}
+			}
+		}
+		if(!brackets.isEmpty()) return 0;
+		return sum;
+	}
+
+
+
+}
