@@ -1,0 +1,55 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+
+
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+
+		String str = br.readLine();
+
+		while(!str.equals(".")){
+			char[] chars = str.toCharArray();
+			if (checkBalance(chars)) {
+				sb.append("yes"+"\n");
+			} else {
+				sb.append("no"+"\n");
+			}
+			str = br.readLine();
+		}
+		System.out.println(sb.toString());
+
+	}
+	private static boolean checkBalance(char[] chars){
+		Stack<Character> brackets = new Stack<>();
+		for(char c : chars){
+			if(c==')'||c==']'||c=='('||c=='['){
+				boolean result = false;
+				switch (c){
+					case ')':
+						if(!brackets.isEmpty()&&brackets.peek()=='(') result = true;
+						break;
+					case ']':
+						if(!brackets.isEmpty()&&brackets.peek()=='[') result = true;
+						break;
+					default:
+						break;
+				}
+
+				if(result){
+					brackets.pop();
+				}else{
+					brackets.push(c);
+				}
+			}
+		}
+		if(brackets.isEmpty()) return true;
+		return false;
+	}
+
+
+
+}
