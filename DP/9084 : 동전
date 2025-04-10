@@ -1,0 +1,36 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int T = Integer.parseInt(br.readLine());
+		StringBuilder sb = new StringBuilder();
+
+		while(T-->0){
+			int N = Integer.parseInt(br.readLine());
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int[] coins = new int[N];
+			for(int n =0;n<N;n++){
+				coins[n] = Integer.parseInt(st.nextToken());
+			}
+			int target = Integer.parseInt(br.readLine());
+			int[][] values = new int[N][target+1];
+
+
+			for(int n =0;n<N;n++){
+				values[n][0] = 1;
+				for(int i =1;i<=target;i++){
+					int midTarget = i-coins[n];
+					if(n>0)  values[n][i] = values[n-1][i] + ( midTarget>=0? values[n][midTarget] : 0);
+					else  values[n][i] = midTarget>=0? values[n][midTarget] : 0;
+				}
+			}
+			sb.append(values[N-1][target]+"\n");
+
+		}
+		System.out.println(sb.toString());
+	}
+
+}
