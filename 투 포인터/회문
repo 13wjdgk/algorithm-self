@@ -1,0 +1,48 @@
+import java.io.*;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		StringBuilder sb = new StringBuilder();
+
+		for(int n = 0;n<N;n++){
+			String str = br.readLine();
+
+			sb.append(checkPalindType(str)+"\n");
+		}
+		System.out.println(sb.toString());
+
+	}
+
+	private static int checkPalindType(String str){
+		int start = 0;
+		int end = str.length() -1;
+		while (start<end){
+			if(str.charAt(start)!=str.charAt(end)){
+				if(isPalindrome(str,start+1,end)||isPalindrome(str,start,end-1)){
+					return 1;
+				}
+				return 2;
+
+			}
+			start++;
+			end--;
+		}
+
+		return 0;
+	}
+
+	private static boolean isPalindrome(String str,int start,int end){
+		while (start<end){
+			if(str.charAt(start)!=str.charAt(end)){
+				return false;
+			}
+			start++;
+			end--;
+		}
+		return true;
+	}
+
+}
