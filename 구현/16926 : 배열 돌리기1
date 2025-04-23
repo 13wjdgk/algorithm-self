@@ -1,0 +1,86 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int X = Integer.parseInt(st.nextToken());
+
+		List<List<Node>> list = new ArrayList<>();
+		for(int n = 0;n<N+1;n++){
+			list.add(new ArrayList<>());
+		}
+
+
+		for(int m =0;m<M;m++){
+			st = new StringTokenizer(br.readLine());
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+			int cost = Integer.parseInt(st.nextToken());
+			list.get(start).add(new Node(end,cost));
+		}
+		int max = 0;
+		for(int home = 1;home<N+1;home++){
+			if (home==X) continue;
+			int[] costs = new int[N+1];
+			Arrays.fill(costs,99999999);
+			boolean[] visited = new boolean[N+1];
+			costs[home] = 0;
+			visited[home] = true;
+			int result = 0;
+			result+=findMinCost(X, list, costs, visited, home);
+			Arrays.fill(costs,99999999);
+			Arrays.fill(visited,false);
+			costs[X] = 0;
+			visited[X] = true;
+			result+=findMinCost(home, list, costs, visited, X);
+			if(max<result){
+				max = result;
+			}
+		}
+		System.out.println(max);
+	}
+
+	private static int findMinCost(int end, List<List<Node>> list, int[] costs, boolean[] visited, int start) {
+		PriorityQueue<Node> pq = new PriorityQueue<>((n1,n2)->n1.cost-n2.cost);
+		pq.add(new Node(start,0));
+		while(!pq.isEmpty()){
+			Node node = pq.poll();
+			if(node.value == end) return costs[node.value];
+			for(Node next : list.get(node.value)){
+				if(!visited[next.value]){
+					if(costs[next.value]> costs[node.value]+ next.cost){
+						costs[next.value] = costs[node.value]+ next.cost;
+						visited[node.value] = true;
+						pq.add(new Node(next.value, costs[next.value]));
+					}
+
+				}
+			}
+		}
+		return costs[end];
+	}
+
+	static class Node{
+		int value;
+		int cost ;
+		Node(int value,int cost){
+			this.value = value;
+			this.cost = cost;
+		}
+	}
+}
